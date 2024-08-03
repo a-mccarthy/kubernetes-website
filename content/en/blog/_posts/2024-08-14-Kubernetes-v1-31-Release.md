@@ -27,7 +27,7 @@ This feature enables connection draining for workloads running on terminating/de
 
 This work was done as part of [KEP #3836](https://github.com/kubernetes/enhancements/issues/3836) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network). /docs/reference/networking/virtual-ips/#external-traffic-policy
 
-### AppAprmor support is now stable - Abbie
+### AppAprmor support is now stable
 
 Kubernetes support for AppArmor is now GA. Protect your Containers using AppArmor by setting the `appArmorProfile.type` field in the Container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is contorlled using fields. Its recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
 
@@ -276,7 +276,7 @@ Explore the upcoming Kubernetes and cloud-native events from August to November 
 - [**KubeCon + CloudNativeCon North America 2024**](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/): November 12-15, 2024 | Salt Lake City, United States
 - [**Kubernetes on EDGE Day North America**](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/co-located-events/kubernetes-on-edge-day/): November 12, 2024 | Salt Lake City, United States
 
-## Upcoming Release Webinar - Abbie
+## Upcoming Release Webinar
 
 <RELEASE WEBINARE WILL TAKE PLACE NORMALLY 30 DAYS AFTER RELEASE, ALIGN WITH CNCF TO HIGHLIGHT THE WEBINAR>
 
