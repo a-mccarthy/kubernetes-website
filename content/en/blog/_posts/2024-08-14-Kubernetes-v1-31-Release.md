@@ -79,10 +79,6 @@ This work was done as a part of [KEP #2644](https://github.com/kubernetes/enhanc
 
 This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
 
-reached out: https://kubernetes.slack.com/archives/C0EN96KUY/p1722015619684019
-
-/docs/reference/access-authn-authz/service-accounts-admin/#bound-service-account-tokens
-
 
 ### Multiple Service CIDRS
 
