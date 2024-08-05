@@ -4,9 +4,8 @@ title: 'Kubernetes v1.31: TITLE'
 date: 2024-08-14
 slug: kubernetes-v1-31-release
 author: >
-  [Kubernetes Release Team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md)
+  [Kubernetes v1.31 Release Team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md)
 ---
-**Authors:** [Kubernetes 1.31 Release Team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release_team.md)
 
 
 
@@ -105,7 +104,9 @@ Traffic Distribution for Services moves to beta in v1.31, enabled by default.
 After several iterations on finding the best user experience and traffic engineering capabilities for Services networking, the SIG Networking implemented the `trafficDistribution` field in the Service specification, that serves as a guideline for the underlying implementation to consider while making routing decisions.
 It supersedes the functionality formerly provided by the `service.kubernetes.io/topology-mode` annotation and its precursor `topologyKeys` field (which has been deprecated since Kubernetes 1.21)
 
-For more details about this feature please read the [1.30 Release Blog](https://kubernetes.io/blog/2024/04/17/kubernetes-v1-30-release/#traffic-distribution-for-services-sig-network-https-github-com-kubernetes-community-tree-master-sig-network) or visit the [Service documentation page](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution).
+For more details about this feature please read the
+[1.30 Release Blog](/blog/2024/04/17/kubernetes-v1-30-release/#traffic-distribution-for-services-sig-network-https-github-com-kubernetes-community-tree-master-sig-network)
+or visit the [Service](/docs/concepts/services-networking/service/#traffic-distribution) documentation page.
 
 This work was done as part of [KEP #4444](https://github.com/kubernetes/enhancements/issues/4444) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network).
 
@@ -114,7 +115,9 @@ This work was done as part of [KEP #4444](https://github.com/kubernetes/enhancem
 
 [VolumeAttributesClass](/docs/concepts/storage/volume-attributes-classes/) API is moving to beta in v1.31.
 The VolumeAttributesClass provides a generic,
-Kubernetes-native API for modifying dynamically volume parameters like provisioned IO. This allows workloads to vertically scale their volumes on-line to balance cost and performance, if supported by their provider. This feature has been alpha since 1.29 and will be beta in 1.31. 
+Kubernetes-native API for modifying dynamically volume parameters like provisioned IO.
+This allows workloads to vertically scale their volumes on-line to balance cost and performance, if supported by their provider.
+This feature had been alpha since Kubernetes 1.29.
 
 This work was done as a part of [KEP #3751](https://github.com/kubernetes/enhancements/issues/3751) and lead by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
 
@@ -190,7 +193,7 @@ This release includes a total of 11 enhancements promoted to Stable:
     
 ### Deprecations and Removals 
 
-Also see our [Kubernetes Removals and Major Changes In v1.31](https://kubernetes.io/blog/2024/07/19/kubernetes-1-31-upcoming-changes/) blog.
+Also see our [Kubernetes Removals and Major Changes In v1.31](/blog/2024/07/19/kubernetes-1-31-upcoming-changes/) blog.
     
 #### Cgroup v1 enters the maintenance mode
 
@@ -232,7 +235,7 @@ You can find more details in the pull request [#122082](https://github.com/kuber
 
 ## Availability
 
-Kubernetes 1.31 is available for download on [GitHub](https://github.com/kubernetes/kubernetes/releases/tag/v1.31.0). To get started with Kubernetes, check out these [interactive tutorials](https://kubernetes.io/docs/tutorials/) or run local Kubernetes clusters using [minikube](https://minikube.sigs.k8s.io/). You can also easily install 1.31 using [kubeadm](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/). 
+Kubernetes 1.31 is available for download on [GitHub](https://github.com/kubernetes/kubernetes/releases/tag/v1.31.0). To get started with Kubernetes, check out these [interactive tutorials](/docs/tutorials/) or run local Kubernetes clusters using [minikube](https://minikube.sigs.k8s.io/). You can also easily install 1.31 using [kubeadm](/docs/setup/independent/create-cluster-kubeadm/). 
 
 ## Release team
 
@@ -285,7 +288,7 @@ Explore the upcoming Kubernetes and cloud-native events from August to November 
 - [**KubeCon + CloudNativeCon North America 2024**](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/): November 12-15, 2024 | Salt Lake City, United States
 - [**Kubernetes on EDGE Day North America**](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/co-located-events/kubernetes-on-edge-day/): November 12, 2024 | Salt Lake City, United States
 
-## Upcoming Release Webinar
+## Upcoming release webinar
 
 <RELEASE WEBINARE WILL TAKE PLACE NORMALLY 30 DAYS AFTER RELEASE, ALIGN WITH CNCF TO HIGHLIGHT THE WEBINAR>
 
