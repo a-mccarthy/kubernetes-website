@@ -19,10 +19,9 @@ _This is a selection of some of the improvements that are now stable following t
 
 ### Improved ingress connectivity reliability for Kube-proxy
 
-Kube-proxy improved ingress connectivity reliability is GA in v1.31. One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop, this feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes and establish some best practices for cloud providers and Kubernetes load balancers implementations.
+Kube-proxy improved ingress connectivity reliability is stable in v1.31. One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop. This feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster` and establish some best practices for cloud providers and Kubernetes load balancers implementations.
 
-
-This feature enables connection draining for workloads running on terminating/deleting Kubernetes nodes which are exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster`. Note: the predicates for using this feature are: a) kube-proxy needs to run as default service proxy on the cluster and b) the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in Kube-proxy since 1.30 and been promoted to stable in 1.31.
+To use this feature, kube-proxy needs to run as default service proxy on the cluster and the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in Kube-proxy since 1.30 and been promoted to stable in 1.31.
 
 For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](/docs/reference/networking/virtual-ips/#external-traffic-policy).
 
@@ -77,6 +76,8 @@ With the introduction of this feature, Kubernetes now guarantees that the "Delet
 This work was done as a part of [KEP #2644](https://github.com/kubernetes/enhancements/issues/2644) and lead by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
     
 ### Bound service account token improvements
+
+The `ServiceAccountTokenNodeBinding` feature is getting promoted to beta in 1.31. To allow for a robust chain of identity verification from the requester to the projected token, the Node object reference associated with the requesting Pod is now added in the private claims embedded into each JWT returned by the TokenRequest API. This helps avoid replay attacks with projected service account tokens. We can cross-reference the identity of the caller to the Node reference embedded in the JWT, which allows this verification to be rooted upon the same root of trust as the kubelet/requesting entity. This makes it easier to track the actions a single token has taken, and cross-reference that back to the origin of the token (via audit log inspection). 
 
 This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
 
@@ -261,7 +262,6 @@ If you are interested in contributing visit [this page](https://www.kubernetes.d
 Explore the upcoming Kubernetes and cloud-native events from August to November 2024, featuring KubeCon, KCD, and other notable conferences worldwide. Stay informed and engage with the Kubernetes community.
 
 **August 2024**
-- [**KCD Taipei 2024**](https://community.cncf.io/events/details/cncf-kcd-taiwan-presents-kcd-taipei-2024/): August 3-4, 2024 | Taipei City, Taiwan
 - [**KubeCon + CloudNativeCon + Open Source Summit China 2024**](https://events.linuxfoundation.org/kubecon-cloudnativecon-open-source-summit-ai-dev-china/): August 21-23, 2024 | Hong Kong
 - [**KubeDay Japan**](https://events.linuxfoundation.org/kubeday-japan/): August 27, 2024 | Tokyo, Japan
 
