@@ -49,9 +49,11 @@ This work was done as a part of [KEP #3762](https://github.com/kubernetes/enhanc
 
 _This is a selection of some of the improvements that are now beta following the v1.31 release._
     
-### Kube-proxy nftables backend
+### nftables backend for kube-proxy
 
-Kube-proxy nftables backend moves to beta in v1.31 and introduces a new feature gate, `NFTablesProxyMode`, disabled by default.
+The Kubernetes project intends to update kube-proxy on Linux so that it uses `nftables`,
+not `iptables`, as the default implementation. The nftables backend moves to beta in v1.31,
+behind a newly added feature gate, `NFTablesProxyMode` (disabled by default).
 In this mode, kube-proxy configures packet forwarding rules using the nftables API of the kernel netfilter subsystem. 
 For each endpoint, it installs nftables rules which, by default, select a backend Pod at random.
 
@@ -84,13 +86,14 @@ This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancem
 
 ### Multiple Service CIDRs
 
-Multiple Service CIDRs moves to beta in v1.31 (disabled by default).
+Support for clusters with multiple Service CIDRs moves to beta in v1.31 (disabled by default).
 
 There are multiple components in a Kubernetes cluster that consume IP addresses: Nodes, Pods and Services. Nodes and Pods IP ranges can be dynamically changed because depend on the infrastructure or the network plugin respectively. However, Services are defined during the cluster creation as a hardcoded flag in the kube-apiserver. 
 IP exhaustion has been a problem for long lived or large clusters, as admins needed to expand, shrink or even replace entirely the assigned Service CIDR range. 
 These operations were never supported natively and were performed via complex and delicate maintenance operations, often causing downtime on their clusters. This KEP allows users and cluster admins to dynamically modify Service CIDR ranges with zero downtime.
 
-For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](https://kubernetes.io/docs/reference/networking/virtual-ips/#ip-address-objects).
+For more details about this feature please visit the
+[Virtual IPs and Service Proxies](/docs/reference/networking/virtual-ips/#ip-address-objects) documentation page.
 
 This work was done as part of [KEP #1880](https://github.com/kubernetes/enhancements/issues/1880) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network).
 
