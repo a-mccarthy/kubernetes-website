@@ -19,17 +19,18 @@ _This is a selection of some of the improvements that are now stable following t
 
 ### Improved ingress connectivity reliability for Kube-proxy
 
-Kube-proxy improved ingress connectivity reliability is GA in v1.31. One of the common problems with Load Balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop, this feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes and establish some best practices for cloud providers and Kubernetes load balancers implementations.
+Kube-proxy improved ingress connectivity reliability is GA in v1.31. One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop, this feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes and establish some best practices for cloud providers and Kubernetes load balancers implementations.
 
 
-exerpt from SIG:
-This feature enables connection draining for workloads running on terminating/deleting Kubernetes nodes which are exposed by services of type: LoadBalancer and externalTrafficPolicy: Cluster . Note: the predicates for using this feature are: a) kube-proxy needs to run as default service proxy on the cluster and b) the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in Kube-proxy since 1.30 and been promoted to stable in 1.31.
+This feature enables connection draining for workloads running on terminating/deleting Kubernetes nodes which are exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster`. Note: the predicates for using this feature are: a) kube-proxy needs to run as default service proxy on the cluster and b) the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in Kube-proxy since 1.30 and been promoted to stable in 1.31.
 
-This work was done as part of [KEP #3836](https://github.com/kubernetes/enhancements/issues/3836) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network). /docs/reference/networking/virtual-ips/#external-traffic-policy
+For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](/docs/reference/networking/virtual-ips/#external-traffic-policy).
+
+This work was done as part of [KEP #3836](https://github.com/kubernetes/enhancements/issues/3836) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network).
 
 ### AppAprmor support is now stable
 
-Kubernetes support for AppArmor is now GA. Protect your Containers using AppArmor by setting the `appArmorProfile.type` field in the Container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is contorlled using fields. Its recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
+Kubernetes support for AppArmor is now GA. Protect your Containers using AppArmor by setting the `appArmorProfile.type` field in the Container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
 
 To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24) lead by  [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
     
@@ -65,7 +66,7 @@ See the full [migration guide](/docs/reference/networking/virtual-ips/#proxy-mod
 
 This work was done as part of [KEP #3866](https://github.com/kubernetes/enhancements/issues/3866) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network).
 
-### Always Honor PersistentVolume Reclaim Policy
+### Changes to reclaim policy for PersistentVolumes
 
 The Always Honor PersistentVolume Reclaim Policy feature has advanced to beta in Kubernetes v1.31. This enhancement ensures that the PersistentVolume (PV) reclaim policy is respected even after the associated PersistentVolumeClaim (PVC) is deleted, thereby preventing the leakage of volumes.
 
@@ -80,7 +81,7 @@ This work was done as a part of [KEP #2644](https://github.com/kubernetes/enhanc
 This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
 
 
-### Multiple Service CIDRS
+### Multiple Service CIDRs
 
 Multiple Service CIDRs moves to beta in v1.31 (disabled by default).
 
@@ -88,17 +89,17 @@ There are multiple components in a Kubernetes cluster that consume IP addresses:
 IP exhaustion has been a problem for long lived or large clusters, as admins needed to expand, shrink or even replace entirely the assigned Service CIDR range. 
 These operations were never supported natively and were performed via complex and delicate maintenance operations, often causing downtime on their clusters. This KEP allows users and cluster admins to dynamically modify Service CIDR ranges with zero downtime.
 
-For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](https://kubernetes.io/docs/reference/networking/virtual-ips/#ip-address-objects)
+For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](https://kubernetes.io/docs/reference/networking/virtual-ips/#ip-address-objects).
 
 This work was done as part of [KEP #1880](https://github.com/kubernetes/enhancements/issues/1880) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network).
 
 
-### Traffic Distribution for Services
+### Traffic distribution for Services
 
 Traffic Distribution for Services moves to beta in v1.31, enabled by default. 
 
-After several iterations on finding the best user experience and traffic engineering capabilities for Services networking, the SIG Networking implemented a `trafficDistribution` field in the Service specification, that serves as a guideline for the underlying implementation to consider while making routing decisions.
-It supersedes the functionality formerly provided by the service.kubernetes.io/topology-mode annotation and it’s precursor `topologyKeys` field (which has been deprecated since Kubernetes 1.21)
+After several iterations on finding the best user experience and traffic engineering capabilities for Services networking, the SIG Networking implemented the `trafficDistribution` field in the Service specification, that serves as a guideline for the underlying implementation to consider while making routing decisions.
+It supersedes the functionality formerly provided by the `service.kubernetes.io/topology-mode` annotation and its precursor `topologyKeys` field (which has been deprecated since Kubernetes 1.21)
 
 For more details about this feature please read the [1.30 Release Blog](https://kubernetes.io/blog/2024/04/17/kubernetes-v1-30-release/#traffic-distribution-for-services-sig-network-https-github-com-kubernetes-community-tree-master-sig-network) or visit the [Service documentation page](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution).
 
@@ -125,7 +126,7 @@ With Kubernetes v1.31, classic DRA has a separate feature gate and needs to be e
 
 This work was done as part of [KEP #3063](https://github.com/kubernetes/enhancements/issues/3063) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
     
-### OCI artifacts as VolumeSource to deliver model weights more efficiently and user friendly: VolumeSource: OCI Artifact and/or Image
+### Support for volumes based on OCI artifacts
 
 The Kubernetes community is moving towards fulfilling more Artificial Intelligence (AI) and Machine Learning (ML) use cases in the future. 
 
@@ -135,11 +136,11 @@ Given that, the Image Volume Source feature is introduced as a new alpha feature
 
 This work was done as part of [KEP #4639](https://github.com/kubernetes/enhancements/issues/4639) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node) and [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
 
-### Better devices errors visibility - the device health is now in pod status: Add Resource Health Status to the Pod Status for Device Plugin and DRA
+### Exposing device health information through Pod status
 
 Expose device health information through the Pod Status is added as a new alpha feature in v1.31, disabled by default.
 
-Before Kubernetes v1.31, the way to know whether or not a Pod is associated with the failed device is to use the [PodResources API](#monitoring-device-plugin-resources). 
+Before Kubernetes v1.31, the way to know whether or not a Pod is associated with the failed device is to use the [PodResources API](/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/#monitoring-device-plugin-resources). 
 
 By enabling this feature, the field `allocatedResourcesStatus` will be added to each container status, within the `.status` for each Pod. The `allocatedResourcesStatus` field reports health information for each device assigned to the container.
  
@@ -147,14 +148,14 @@ By enabling this feature, the field `allocatedResourcesStatus` will be added to 
 This work was done as part of [KEP #4680](https://github.com/kubernetes/enhancements/issues/4680) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
 
-### Authorize with field and label selectors going Alpha in 1.31
+### Finer-grained authorization based on selectors
 
 This feature allows webhook authorizers and future (but not currently designed) in-tree authorizers to allow list and watch requests based on field and label selectors.  It is now possible for an authorizer to express: this user cannot list all pods, but can list all pods where `.spec.nodeName=foo`.  Combined with CRD field selectors (moving to beta in 1.31), it is possible to write more secure per-node extensions.
     
 This work was done as part of [KEP #4601](https://github.com/kubernetes/enhancements/issues/4601) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
     
 
-### Only allow anonymous auth for configured endpoints going Alpha in 1.31
+### Restrictions on anonymous API access
 
 By enabling the feature gate `AnonymousAuthConfigurableEndpoints` users can now use the authentication configuration file to configure the endpoints that can be accessed by anonymous requests. This allows users to protect themselves against RBAC misconfigurations that can give anonymous users broad access to the cluster.
     
@@ -200,18 +201,27 @@ Please report any problems encounter by filing an [issue](https://github.com/kub
 
 This work was done as part of [KEP #4569](https://github.com/kubernetes/enhancements/issues/4569) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
-## Release Notes and Upgrade Actions Required
+## Release notes and upgrade actions required
 
 Check out the full details of the Kubernetes 1.31 release in our [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.31.md).
 
-### KubeSchedule now uses QueueingHint when `SchedulerQueueingHints` is enabled
-Added support to the scheduler to start using QueueingHint registered for Pod/Updated event to determine whether unschedulable Pods update make them schedulable, when the feature gate `SchedulerQueueingHints` is enabled. Previously, when unschedulable Pods are updated, the scheduler always put Pods back to activeQ/backoffQ. But, actually not all updates to Pods make Pods schedulable, especially considering many scheduling constraints nowadays are immutable. Now, when unschedulable Pods are updated, the scheduling queue checks with QueueingHint(s) whether the update may make the pods schedulable, and requeues them to activeQ/backoffQ only when at least one QueueingHint(s) return Queue.
+### Scheduler now uses QueueingHint when `SchedulerQueueingHints` is enabled
+Added support to the scheduler to start using a QueueingHint registered for Pod/Updated events,
+to determine whether updates to  previously unschedulable Pods have made them schedulable.
+The new support is active when the feature gate `SchedulerQueueingHints` is enabled.
+
+Previously, when unschedulable Pods were updated, the scheduler always put Pods back to into a queue
+(`activeQ` / `backoffQ`). However not all updates to Pods make Pods schedulable, especially considering
+many scheduling constraints nowadays are immutable. Under the new behaviour, once unschedulable Pods
+are updated, the scheduling queue checks with QueueingHint(s) whether the update may make the
+pod(s) schedulable, and requeues them to `activeQ` or `backoffQ` only when at least one
+QueueingHint returns `Queue`.
 
 **Action required for custom scheduler plugin developers**: 
-Plugins have to implement a QueueingHint for Pod/Update event if the rejection from them could be resolved by updating unscheduled Pods themselves. Example: suppose you develop a custom plugin that denies Pods that have a schedulable=false label. Given Pods with a schedulable=false label will be schedulable if the schedulable=false label is removed, this plugin would implement QueueingHint for Pod/Update event that returns Queue when such label changes are made in unscheduled Pods. [#122234](https://github.com/kubernetes/kubernetes/pull/122234)
+Plugins have to implement a QueueingHint for Pod/Update event if the rejection from them could be resolved by updating unscheduled Pods themselves. Example: suppose you develop a custom plugin that denies Pods that have a `schedulable=false` label. Given Pods with a `schedulable=false` label will be schedulable if the `schedulable=false` label is removed, this plugin would implement QueueingHint for Pod/Update event that returns Queue when such label changes are made in unscheduled Pods. [#122234](https://github.com/kubernetes/kubernetes/pull/122234)
 
 ### Removal of kubelet --keep-terminated-pod-volumes command line flag
-The kubelet flag --keep-terminated-pod-volumes, which was deprecated in 2017, will be removed as part of the v1.31 release.
+The kubelet flag `--keep-terminated-pod-volumes`, which was deprecated in 2017, was removed as part of the v1.31 release.
 
 You can find more details in the pull request [#122082](https://github.com/kubernetes/kubernetes/pull/122082).
 
@@ -220,7 +230,7 @@ You can find more details in the pull request [#122082](https://github.com/kuber
 
 Kubernetes 1.31 is available for download on [GitHub](https://github.com/kubernetes/kubernetes/releases/tag/v1.31.0). To get started with Kubernetes, check out these [interactive tutorials](https://kubernetes.io/docs/tutorials/) or run local Kubernetes clusters using [minikube](https://minikube.sigs.k8s.io/). You can also easily install 1.31 using [kubeadm](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/). 
 
-## Release Team
+## Release team
 
 Kubernetes is only possible with the support, commitment, and hard work of its community. Each release team is made up of dedicated community volunteers who work together to build the many pieces that make up the Kubernetes releases you rely on. This requires the specialized skills of people from all corners of our community, from the code itself to its documentation and project management.
 
@@ -228,7 +238,7 @@ We would like to thank the entire [release team](https://github.com/kubernetes/s
 
 
 
-## Project Velocity
+## Project velocity
 
 The CNCF K8s DevStats project aggregates a number of interesting data points related to the velocity of Kubernetes and various sub-projects. This includes everything from individual contributions to the number of companies that are contributing and is an illustration of the depth and breadth of effort that goes into evolving this ecosystem.
 
@@ -246,7 +256,7 @@ If you are interested in contributing visit [this page](https://www.kubernetes.d
 
 [Check out DevStats](https://k8s.devstats.cncf.io/d/11/companies-contributing-in-repository-groups?orgId=1&var-period=m&var-repogroup_name=All) to learn more about the overall velocity of the Kubernetes project and community.
 
-## Event Update
+## Event update
 
 Explore the upcoming Kubernetes and cloud-native events from August to November 2024, featuring KubeCon, KCD, and other notable conferences worldwide. Stay informed and engage with the Kubernetes community.
 
@@ -276,7 +286,7 @@ Explore the upcoming Kubernetes and cloud-native events from August to November 
 
 <RELEASE WEBINARE WILL TAKE PLACE NORMALLY 30 DAYS AFTER RELEASE, ALIGN WITH CNCF TO HIGHLIGHT THE WEBINAR>
 
-## Get Involved
+## Get involved
 
 The simplest way to get involved with Kubernetes is by joining one of the many [Special Interest Groups](https://github.com/kubernetes/community/blob/master/sig-list.md) (SIGs) that align with your interests. Have something you’d like to broadcast to the Kubernetes community? Share your voice at our weekly [community meeting](https://github.com/kubernetes/community/tree/master/communication), and through the channels below. Thank you for your continued feedback and support.
 
