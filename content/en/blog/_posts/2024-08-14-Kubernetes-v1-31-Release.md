@@ -17,6 +17,12 @@ author: >
 
 _This is a selection of some of the improvements that are now stable following the v1.31 release._
 
+### AppAprmor support is now stable
+
+Kubernetes support for AppArmor is now GA. Protect your Containers using AppArmor by setting the `appArmorProfile.type` field in the Container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
+
+To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24) lead by  [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
+
 ### Improved ingress connectivity reliability for Kube-proxy
 
 Kube-proxy improved ingress connectivity reliability is stable in v1.31. One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop. This feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster` and establish some best practices for cloud providers and Kubernetes load balancers implementations.
@@ -26,12 +32,6 @@ To use this feature, kube-proxy needs to run as default service proxy on the clu
 For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](/docs/reference/networking/virtual-ips/#external-traffic-policy).
 
 This work was done as part of [KEP #3836](https://github.com/kubernetes/enhancements/issues/3836) by [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network).
-
-### AppAprmor support is now stable
-
-Kubernetes support for AppArmor is now GA. Protect your Containers using AppArmor by setting the `appArmorProfile.type` field in the Container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
-
-To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24) lead by  [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
     
 
 ### Persistent Volume last phase transition time
@@ -41,7 +41,7 @@ With this feature enabled, every PersistentVolume object will have a new field `
 when the volume last transitioned its phase. This change is not immediate; the new field will be populated whenever a PersistentVolume is updated and first transitions between phases (`Pending`, `Bound`, or `Released`) after upgrading to Kubernetes v1.31.
 This allows you to measure time between when a PersistentVolume moves from `Pending` to `Bound`. This can be also useful for providing metrics and SLOs.
 
-For more details about this feature please visit the [PersistentVolume documentation page](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeStatus).
+For more details about this feature please visit the [PersistentVolume documentation page](/docs/concepts/storage/persistent-volumes/).
 
 This work was done as a part of [KEP #3762](https://github.com/kubernetes/enhancements/issues/3762) lead by  [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
 
@@ -122,7 +122,7 @@ This work was done as a part of [KEP #3751](https://github.com/kubernetes/enhanc
 
 _This is a selection of some of the improvements that are now alpha following the v1.31 release._
     
-### New DRA APIs for better accelerators and other hardware management: DRA: control plane controller ("classic DRA")
+### New DRA APIs for better accelerators and other hardware management
 
 Kubernetes v1.31 brings an updated dynamic resource allocation (DRA) API and design. The main focus in the update is on structured parameters because they make resource information and requests transparent to Kubernetes and clients and enable implementing features like cluster autoscaling. DRA support in the kubelet was updated such that version skew between kubelet and the control plane is possible. With structured parameters, the scheduler allocates `ResourceClaims` while scheduling a pod. Allocation by a DRA driver controller is still supported through what is now called "classic DRA". 
 
