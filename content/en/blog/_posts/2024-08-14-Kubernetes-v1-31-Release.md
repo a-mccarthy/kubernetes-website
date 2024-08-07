@@ -18,15 +18,15 @@ _This is a selection of some of the improvements that are now stable following t
 
 ### AppAprmor support is now stable
 
-Kubernetes support for AppArmor is now GA. Protect your Containers using AppArmor by setting the `appArmorProfile.type` field in the Container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
+Kubernetes support for AppArmor is now GA. Protect your containers using AppArmor by setting the `appArmorProfile.type` field in the container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
 
-To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24) lead by  [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
+To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24), led by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
-### Improved ingress connectivity reliability for Kube-proxy
+### Improved ingress connectivity reliability for kube-proxy
 
 Kube-proxy improved ingress connectivity reliability is stable in v1.31. One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop. This feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster` and establish some best practices for cloud providers and Kubernetes load balancers implementations.
 
-To use this feature, kube-proxy needs to run as default service proxy on the cluster and the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in Kube-proxy since 1.30 and been promoted to stable in 1.31.
+To use this feature, kube-proxy needs to run as default service proxy on the cluster and the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in kube-proxy since 1.30 and been promoted to stable in 1.31.
 
 For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](/docs/reference/networking/virtual-ips/#external-traffic-policy).
 
@@ -89,7 +89,7 @@ Support for clusters with multiple Service CIDRs moves to beta in v1.31 (disable
 
 There are multiple components in a Kubernetes cluster that consume IP addresses: Nodes, Pods and Services. Nodes and Pods IP ranges can be dynamically changed because depend on the infrastructure or the network plugin respectively. However, Services are defined during the cluster creation as a hardcoded flag in the kube-apiserver. 
 IP exhaustion has been a problem for long lived or large clusters, as admins needed to expand, shrink or even replace entirely the assigned Service CIDR range. 
-These operations were never supported natively and were performed via complex and delicate maintenance operations, often causing downtime on their clusters. This KEP allows users and cluster admins to dynamically modify Service CIDR ranges with zero downtime.
+These operations were never supported natively and were performed via complex and delicate maintenance operations, often causing downtime on their clusters. This new feature allows users and cluster admins to dynamically modify Service CIDR ranges with zero downtime.
 
 For more details about this feature please visit the
 [Virtual IPs and Service Proxies](/docs/reference/networking/virtual-ips/#ip-address-objects) documentation page.
@@ -99,10 +99,10 @@ This work was done as part of [KEP #1880](https://github.com/kubernetes/enhancem
 
 ### Traffic distribution for Services
 
-Traffic Distribution for Services moves to beta in v1.31, enabled by default. 
+Traffic distribution for Services moves to beta in v1.31 and is enabled by default. 
 
 After several iterations on finding the best user experience and traffic engineering capabilities for Services networking, the SIG Networking implemented the `trafficDistribution` field in the Service specification, that serves as a guideline for the underlying implementation to consider while making routing decisions.
-It supersedes the functionality formerly provided by the `service.kubernetes.io/topology-mode` annotation and its precursor `topologyKeys` field (which has been deprecated since Kubernetes 1.21)
+It supersedes the functionality formerly provided by the `service.kubernetes.io/topology-mode` annotation and its precursor `topologyKeys` field (which has been deprecated since Kubernetes 1.21).
 
 For more details about this feature please read the
 [1.30 Release Blog](/blog/2024/04/17/kubernetes-v1-30-release/#traffic-distribution-for-services-sig-network-https-github-com-kubernetes-community-tree-master-sig-network)
@@ -157,7 +157,12 @@ This work was done as part of [KEP #4680](https://github.com/kubernetes/enhancem
 
 ### Finer-grained authorization based on selectors
 
-This feature allows webhook authorizers and future (but not currently designed) in-tree authorizers to allow list and watch requests based on field and label selectors.  It is now possible for an authorizer to express: this user cannot list all pods, but can list all pods where `.spec.nodeName=foo`.  Combined with CRD field selectors (moving to beta in 1.31), it is possible to write more secure per-node extensions.
+This feature allows webhook authorizers and future (but not currently designed) in-tree authorizers to
+allow **list** and **watch** requests, provided those requests use label and/or field selectors.
+For example, it is now possible for an authorizer to express: this user cannot list all pods, but can list all pods where `.spec.nodeName` matches some specific value. Or to allow a user to watch all Secrets in a namespace
+that are _not_ labelled as `confidential: true`.
+Combined with CRD field selectors (also moving to beta in 1.31), it is possible to write more secure
+per-node extensions.
     
 This work was done as part of [KEP #4601](https://github.com/kubernetes/enhancements/issues/4601) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
     
@@ -178,17 +183,17 @@ This lists all the features that graduated to stable (also known as _general ava
 
 This release includes a total of 11 enhancements promoted to Stable:
 
-* [PersistentVolume last phase transition time](	https://github.com/kubernetes/enhancements/issues/3762)
-* [Metric cardinality enforcement](	https://github.com/kubernetes/enhancements/issues/2305)
-* [Kube-proxy improved ingress connectivity reliability](	https://github.com/kubernetes/enhancements/issues/3836)
-* [Add CDI devices to device plugin API](	https://github.com/kubernetes/enhancements/issues/4009)
-* [Move cgroup v1 support into maintenance mode](	https://github.com/kubernetes/enhancements/issues/4569)
-* [AppArmor support](	https://github.com/kubernetes/enhancements/issues/24)
-* [PodHealthyPolicy for PodDisruptionBudget](	https://github.com/kubernetes/enhancements/issues/3017)
-* [Retriable and non-retriable Pod failures for Jobs](	https://github.com/kubernetes/enhancements/issues/3329)
-* [Elastic Indexed Jobs](	https://github.com/kubernetes/enhancements/issues/3715)
-* [Allow StatefulSet to control start replica ordinal numbering](	https://github.com/kubernetes/enhancements/issues/3335)
-* [Random Pod selection on ReplicaSet downscaling](	https://github.com/kubernetes/enhancements/issues/2185)
+* [PersistentVolume last phase transition time](https://github.com/kubernetes/enhancements/issues/3762)
+* [Metric cardinality enforcement](https://github.com/kubernetes/enhancements/issues/2305)
+* [Kube-proxy improved ingress connectivity reliability](https://github.com/kubernetes/enhancements/issues/3836)
+* [Add CDI devices to device plugin API](https://github.com/kubernetes/enhancements/issues/4009)
+* [Move cgroup v1 support into maintenance mode](https://github.com/kubernetes/enhancements/issues/4569)
+* [AppArmor support](https://github.com/kubernetes/enhancements/issues/24)
+* [PodHealthyPolicy for PodDisruptionBudget](https://github.com/kubernetes/enhancements/issues/3017)
+* [Retriable and non-retriable Pod failures for Jobs](https://github.com/kubernetes/enhancements/issues/3329)
+* [Elastic Indexed Jobs](https://github.com/kubernetes/enhancements/issues/3715)
+* [Allow StatefulSet to control start replica ordinal numbering](https://github.com/kubernetes/enhancements/issues/3335)
+* [Random Pod selection on ReplicaSet downscaling](https://github.com/kubernetes/enhancements/issues/2185)
     
     
 ### Deprecations and Removals 
@@ -198,13 +203,13 @@ Also see our [Kubernetes Removals and Major Changes In v1.31](/blog/2024/07/19/k
 #### Cgroup v1 enters the maintenance mode
 
 As Kubernetes continues to evolve and adapt to the changing landscape of container orchestration, the community has decided to move cgroup v1 support into maintenance mode in v1.31.
-This shift aligns with the broader industry's move towards [cgroup v2](https://kubernetes.io/docs/concepts/architecture/cgroups/), offering improved functionality, scalability, and a more consistent interface. 
+This shift aligns with the broader industry's move towards [cgroup v2](/docs/concepts/architecture/cgroups/), offering improved functionality, scalability, and a more consistent interface. 
 Maintance mode means that no new features will be added to cgroup v1 support. 
 Critical security fixes will still be provided, however, bug-fixing is now best-effort, meaning major bugs may be fixed if feasible, but some issues might remain unresolved.
 
 Its recommended that you start switching to use cgroup v2 as soon as possible. For more details on the reasoning behind placing cgroup v1 in maintaince mode and starting the migration process see the [Moving cgroup v1 Support into Maintenance Mode in Kubernetes 1.31](/blog/kubernetes-1-31-moving-cgroup-v1-support-maintenance-mode) article. 
 
-Please report any problems encounter by filing an [issue](https://github.com/kubernetes/kubernetes).
+Please report any problems encounter by filing an [issue](https://github.com/kubernetes/kubernetes/issues).
 
 This work was done as part of [KEP #4569](https://github.com/kubernetes/enhancements/issues/4569) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
@@ -225,7 +230,7 @@ pod(s) schedulable, and requeues them to `activeQ` or `backoffQ` only when at le
 QueueingHint returns `Queue`.
 
 **Action required for custom scheduler plugin developers**: 
-Plugins have to implement a QueueingHint for Pod/Update event if the rejection from them could be resolved by updating unscheduled Pods themselves. Example: suppose you develop a custom plugin that denies Pods that have a `schedulable=false` label. Given Pods with a `schedulable=false` label will be schedulable if the `schedulable=false` label is removed, this plugin would implement QueueingHint for Pod/Update event that returns Queue when such label changes are made in unscheduled Pods. [#122234](https://github.com/kubernetes/kubernetes/pull/122234)
+Plugins have to implement a QueueingHint for Pod/Update event if the rejection from them could be resolved by updating unscheduled Pods themselves. Example: suppose you develop a custom plugin that denies Pods that have a `schedulable=false` label. Given Pods with a `schedulable=false` label will be schedulable if the `schedulable=false` label is removed, this plugin would implement QueueingHint for Pod/Update event that returns Queue when such label changes are made in unscheduled Pods. You can find more details in the pull request [#122234](https://github.com/kubernetes/kubernetes/pull/122234).
 
 ### Removal of kubelet --keep-terminated-pod-volumes command line flag
 The kubelet flag `--keep-terminated-pod-volumes`, which was deprecated in 2017, was removed as part of the v1.31 release.
