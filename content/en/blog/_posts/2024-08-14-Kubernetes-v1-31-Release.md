@@ -1,13 +1,11 @@
 ---
 layout: blog
 title: 'Kubernetes v1.31: TITLE'
-date: 2024-08-14
+date: 2024-08-13
 slug: kubernetes-v1-31-release
 author: >
   [Kubernetes v1.31 Release Team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md)
 ---
-
-
 
 ## Release theme and logo
 <Logo image size is recommended to be no more than 2160px/>
@@ -198,7 +196,7 @@ This release includes a total of 11 enhancements promoted to Stable:
     
 ### Deprecations and Removals 
 
-Also see our [Kubernetes Removals and Major Changes In v1.31](/blog/2024/07/19/kubernetes-1-31-upcoming-changes/) blog.
+As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health. Also see the Kubernetes [deprecation and removals policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
     
 #### Cgroup v1 enters the maintenance mode
 
@@ -213,11 +211,91 @@ Please report any problems encounter by filing an [issue](https://github.com/kub
 
 This work was done as part of [KEP #4569](https://github.com/kubernetes/enhancements/issues/4569) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
-## Release notes and upgrade actions required
+#### A note about SHA-1 signature support
+
+In [go1.18](https://go.dev/doc/go1.18#sha1) (released in March 2022), the crypto/x509 library started to reject certificates signed with a SHA-1 hash function. 
+While SHA-1 is established to be unsafe and publicly trusted Certificate Authorities have not issued SHA-1 certificates since 2015, there might still be cases in the context of Kubernetes where user-provided certificates are signed using a SHA-1 hash function through private authorities with them being used for Aggregated API Servers or webhooks. 
+If you have relied on SHA-1 based certificates, you must explicitly opt back into its support by setting `GODEBUG=x509sha1=1` in your environment.
+
+Given Go's [compatibility policy for GODEBUGs](https://go.dev/blog/compat), the `x509sha1` GODEBUG and the support for SHA-1 certificates will [fully go away in go1.24](https://tip.golang.org/doc/go1.23) which will be released in the first half of 2025. 
+If you rely on SHA-1 certificates, please start moving off them.
+
+Please see [Kubernetes issue #125689](https://github.com/kubernetes/kubernetes/issues/125689) to get a better idea of timelines around the support for SHA-1 going away, when Kubernetes releases plans to adopt go1.24, and for more details on how to detect usage of SHA-1 certificates via metrics and audit logging. 
+
+#### Deprecation of `status.nodeInfo.kubeProxyVersion` field for Nodes ([KEP 4004](https://github.com/kubernetes/enhancements/issues/4004))
+
+The `.status.nodeInfo.kubeProxyVersion` field of Nodes is being deprecated in Kubernetes v1.31,
+and will be removed in a later release.
+It's being deprecated because the value of this field wasn't (and isn't) accurate.
+This field is set by the kubelet, which does not have reliable information about the kube-proxy version or whether kube-proxy is running. 
+
+The `DisableNodeKubeProxyVersion` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) will be set to `true` in by default in v1.31 and the kubelet will no longer attempt to set the `.status.kubeProxyVersion` field for its associated Node.
+
+#### Removal of all in-tree integrations with cloud providers
+
+As highlighted in a [previous article](/blog/2024/05/20/completing-cloud-provider-migration/), the last remaining in-tree support for cloud provider integration will be removed as part of the v1.31 release.
+This doesn't mean you can't integrate with a cloud provider, however you now **must** use the
+recommended approach using an external integration. Some integrations are part of the Kubernetes
+project and others are third party software.
+
+This milestone marks the completion of the externalization process for all cloud providers' integrations from the Kubernetes core ([KEP-2395](https://github.com/kubernetes/enhancements/blob/master/keps/sig-cloud-provider/2395-removing-in-tree-cloud-providers/README.md)), a process started with Kubernetes v1.26. 
+This change helps Kubernetes to get closer to being a truly vendor-neutral platform.
+
+For further details on the cloud provider integrations, read our [v1.29 Cloud Provider Integrations feature blog](/blog/2023/12/14/cloud-provider-integration-changes/). 
+For additional context about the in-tree code removal, we invite you to check the ([v1.29 deprecation blog](/blog/2023/11/16/kubernetes-1-29-upcoming-changes/#removal-of-in-tree-integrations-with-cloud-providers-kep-2395-https-kep-k8s-io-2395)).
+
+The latter blog also contains useful information for users who need to migrate to version v1.29 and later.
+
+#### Removal of in-tree provider feature gates
+
+In Kubernetes 1.31, the following alpha feature gates `InTreePluginAWSUnregister`, `InTreePluginAzureDiskUnregister`, `InTreePluginAzureFileUnregister`, `InTreePluginGCEUnregister`, `InTreePluginOpenStackUnregister`, and `InTreePluginvSphereUnregister` have been removed. These feature gates were introduced to facilitate the testing of scenarios where in-tree volume plugins were removed from the codebase, without actually removing them. Since Kubernetes 1.30 had deprecated these in-tree volume plugins, these feature gates were redundant and no longer served a purpose. The only CSI migration gate still standing is `InTreePluginPortworxUnregister`, which will remain in alpha until the CSI migration for Portworx is completed and its in-tree volume plugin will be ready for removal.
+
+
+#### Removal of kubelet `--keep-terminated-pod-volumes` command line flag
+
+The kubelet flag `--keep-terminated-pod-volumes`, which was deprecated in 2017, will be removed as
+part of the v1.31 release.
+
+You can find more details in the pull request [#122082](https://github.com/kubernetes/kubernetes/pull/122082).
+
+#### Removal of CephFS volume plugin 
+
+[CephFS volume plugin](/docs/concepts/storage/volumes/#cephfs) was removed in this release and the `cephfs` volume type became non-functional. 
+
+It is recommended that you use the [CephFS CSI driver](https://github.com/ceph/ceph-csi/) as a third-party storage driver instead. If you were using the CephFS volume plugin before upgrading the cluster version to v1.31, you must re-deploy your application to use the new driver.
+
+CephFS volume plugin was formally marked as deprecated in v1.28.
+
+#### Removal of Ceph RBD volume plugin
+
+The v1.31 release will remove the [Ceph RBD volume plugin](/docs/concepts/storage/volumes/#rbd) and its CSI migration support, making the `rbd` volume type non-functional.
+
+It's recommended that you use the [RBD CSI driver](https://github.com/ceph/ceph-csi/) in your clusters instead. 
+If you were using Ceph RBD volume plugin before upgrading the cluster version to v1.31, you must re-deploy your application to use the new driver.
+
+The Ceph RBD volume plugin was formally marked as deprecated in v1.28.
+
+#### Deprecation of non-CSI volume limit plugins in kube-scheduler
+
+The v1.31 release will deprecate all non-CSI volume limit scheduler plugins, and will remove some
+already deprected plugins from the [default plugins](/docs/reference/scheduling/config/), including:
+
+- `AzureDiskLimits`
+- `CinderLimits`
+- `EBSLimits`
+- `GCEPDLimits`
+
+It's recommended that you use the `NodeVolumeLimits` plugin instead because it can handle the same functionality as the removed plugins since those volume types have been migrated to CSI. 
+Please replace the deprecated plugins with the `NodeVolumeLimits` plugin if you explicitly use them in the [scheduler config](/docs/reference/scheduling/config/). 
+The `AzureDiskLimits`, `CinderLimits`, `EBSLimits`, and `GCEPDLimits` plugins will be removed in a future release.
+
+These plugins will be removed from the default scheduler plugins list as they have been deprecated since Kubernetes v1.14.
+
+### Release notes and upgrade actions required
 
 Check out the full details of the Kubernetes 1.31 release in our [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.31.md).
 
-### Scheduler now uses QueueingHint when `SchedulerQueueingHints` is enabled
+#### Scheduler now uses QueueingHint when `SchedulerQueueingHints` is enabled
 Added support to the scheduler to start using a QueueingHint registered for Pod/Updated events,
 to determine whether updates to  previously unschedulable Pods have made them schedulable.
 The new support is active when the feature gate `SchedulerQueueingHints` is enabled.
@@ -232,7 +310,7 @@ QueueingHint returns `Queue`.
 **Action required for custom scheduler plugin developers**: 
 Plugins have to implement a QueueingHint for Pod/Update event if the rejection from them could be resolved by updating unscheduled Pods themselves. Example: suppose you develop a custom plugin that denies Pods that have a `schedulable=false` label. Given Pods with a `schedulable=false` label will be schedulable if the `schedulable=false` label is removed, this plugin would implement QueueingHint for Pod/Update event that returns Queue when such label changes are made in unscheduled Pods. You can find more details in the pull request [#122234](https://github.com/kubernetes/kubernetes/pull/122234).
 
-### Removal of kubelet --keep-terminated-pod-volumes command line flag
+#### Removal of kubelet --keep-terminated-pod-volumes command line flag
 The kubelet flag `--keep-terminated-pod-volumes`, which was deprecated in 2017, was removed as part of the v1.31 release.
 
 You can find more details in the pull request [#122082](https://github.com/kubernetes/kubernetes/pull/122082).
@@ -240,14 +318,15 @@ You can find more details in the pull request [#122082](https://github.com/kuber
 
 ## Availability
 
-Kubernetes 1.31 is available for download on [GitHub](https://github.com/kubernetes/kubernetes/releases/tag/v1.31.0). To get started with Kubernetes, check out these [interactive tutorials](/docs/tutorials/) or run local Kubernetes clusters using [minikube](https://minikube.sigs.k8s.io/). You can also easily install 1.31 using [kubeadm](/docs/setup/independent/create-cluster-kubeadm/). 
+Kubernetes v1.31 is available for download on [GitHub](https://github.com/kubernetes/kubernetes/releases/tag/v1.31.0) or on the [Kubernetes download page](https://kubernetes.io/releases/download/). 
+
+To get started with Kubernetes, check out these [interactive tutorials](/docs/tutorials/) or run local Kubernetes clusters using [minikube](https://minikube.sigs.k8s.io/). You can also easily install 1.31 using [kubeadm](/docs/setup/independent/create-cluster-kubeadm/). 
 
 ## Release team
 
 Kubernetes is only possible with the support, commitment, and hard work of its community. Each release team is made up of dedicated community volunteers who work together to build the many pieces that make up the Kubernetes releases you rely on. This requires the specialized skills of people from all corners of our community, from the code itself to its documentation and project management.
 
 We would like to thank the entire [release team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md) for the hours spent hard at work to deliver the Kubernetes v1.31 release to our community. The Release Team's membership ranges from first-time shadows to returning team leads with experience forged over several release cycles. A very special thanks goes out our release lead, Angelos Kolaitis, for supporting us through a successful release cycle, advocating for us, making sure that we could all contribute in the best way possible, and challenging us to improve the release process.
-
 
 
 ## Project velocity
@@ -295,7 +374,8 @@ Explore the upcoming Kubernetes and cloud-native events from August to November 
 
 ## Upcoming release webinar
 
-<RELEASE WEBINARE WILL TAKE PLACE NORMALLY 30 DAYS AFTER RELEASE, ALIGN WITH CNCF TO HIGHLIGHT THE WEBINAR>
+Join members of the Kubernetes v1.31 release team on Thursday, 	Thu Sep 12, 2024 10am PT to learn about the major features of this release, as well as deprecations and removals to help plan for upgrades. For more information and registration, visit the [event page](https://community.cncf.io/events/details/cncf-cncf-online-programs-presents-cncf-live-webinar-kubernetes-131-release/) on the CNCF Online Programs site.
+
 
 ## Get involved
 
