@@ -125,19 +125,21 @@ _This is a selection of some of the improvements that are now alpha following th
     
 ### New DRA APIs for better accelerators and other hardware management
 
-Kubernetes v1.31 brings an updated dynamic resource allocation (DRA) API and design. The main focus in the update is on structured parameters because they make resource information and requests transparent to Kubernetes and clients and enable implementing features like cluster autoscaling. DRA support in the kubelet was updated such that version skew between kubelet and the control plane is possible. With structured parameters, the scheduler allocates `ResourceClaims` while scheduling a pod. Allocation by a DRA driver controller is still supported through what is now called "classic DRA". 
+Kubernetes v1.31 brings an updated dynamic resource allocation (DRA) API and design. The main focus in the update is on structured parameters because they make resource information and requests transparent to Kubernetes and clients and enable implementing features like cluster autoscaling. DRA support in the kubelet was updated such that version skew between kubelet and the control plane is possible. With structured parameters, the scheduler allocates ResourceClaims while scheduling a pod. Allocation by a DRA driver controller is still supported through what is now called "classic DRA".
 
-With Kubernetes v1.31, classic DRA has a separate feature gate and needs to be enabled with `DRAControlPlaneController`. With such a control plane controller, a DRA driver can implement allocation policies that are not supported yet through structured parameters.
+With Kubernetes v1.31, classic DRA has a separate feature gate named `DRAControlPlaneController`, which you need to enable explicitly. With such a control plane controller, a DRA driver can implement allocation policies that are not supported yet through structured parameters.
 
 This work was done as part of [KEP #3063](https://github.com/kubernetes/enhancements/issues/3063) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
     
-### Support for volumes based on OCI artifacts
+### Support for image volumes
 
 The Kubernetes community is moving towards fulfilling more Artificial Intelligence (AI) and Machine Learning (ML) use cases in the future. 
 
-One of the requirements to support these use cases is to support Open Container Initiative (OCI) compatible images and artifacts (referred as OCI objects) directly as a native volume source. This allows users to focus on OCI standards as well as enables them to store and distribute any content using OCI registries.
+One of the requirements to fulfill these use cases is to support Open Container Initiative (OCI) compatible images and artifacts (referred as OCI objects) directly as a native volume source. This allows users to focus on OCI standards as well as enables them to store and distribute any content using OCI registries.
 
-Given that, the Image Volume Source feature is introduced as a new alpha feature in v1.31. This feature allows users to specify an image reference as volume in a pod while reusing it as volume mount within containers.
+Given that, v1.31 adds a new alpha feature to allow using an OCI image as a volume in a Pod.
+This feature allows users to specify an image reference as volume in a pod while reusing it as volume
+mount within containers. You need to enable the `ImageVolume` feature gate to try this out.
 
 This work was done as part of [KEP #4639](https://github.com/kubernetes/enhancements/issues/4639) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node) and [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
 
