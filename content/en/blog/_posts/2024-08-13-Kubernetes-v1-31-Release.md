@@ -7,6 +7,15 @@ author: >
   [Kubernetes v1.31 Release Team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md)
 ---
 
+Announcing the release of Kubernetes v1.31: <THING>, <tagline>!
+
+Similar to previous releases, the release of Kubernetes v1.31 introduces new
+stable, beta, and alpha features. 
+The consistent delivery of high-quality releases underscores the strength of our development cycle and the vibrant support from our community.
+This release consists of 45 enhancements.
+Of those enhancements, 11 have graduated to Stable, 22 are entering Beta, 
+and 12 have graduated to Alpha.
+
 ## Release theme and logo
 <Logo image size is recommended to be no more than 2160px/>
 
@@ -16,15 +25,21 @@ _This is a selection of some of the improvements that are now stable following t
 
 ### AppAprmor support is now stable
 
-Kubernetes support for AppArmor is now GA. Protect your containers using AppArmor by setting the `appArmorProfile.type` field in the container's `securityContext`. Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
+Kubernetes support for AppArmor is now GA. Protect your containers using AppArmor by setting the `appArmorProfile.type` field in the container's `securityContext`. 
+Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields. 
+It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.
 
-To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24), led by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
+To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/). 
+This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24), by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
 ### Improved ingress connectivity reliability for kube-proxy
 
-Kube-proxy improved ingress connectivity reliability is stable in v1.31. One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop. This feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster` and establish some best practices for cloud providers and Kubernetes load balancers implementations.
+Kube-proxy improved ingress connectivity reliability is stable in v1.31. 
+One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop. 
+This feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster` and establish some best practices for cloud providers and Kubernetes load balancers implementations.
 
-To use this feature, kube-proxy needs to run as default service proxy on the cluster and the load balancer needs to support connection draining. There are no specific changes required for using this feature, it has been enabled by default in kube-proxy since 1.30 and been promoted to stable in 1.31.
+To use this feature, kube-proxy needs to run as default service proxy on the cluster and the load balancer needs to support connection draining. 
+There are no specific changes required for using this feature, it has been enabled by default in kube-proxy since 1.30 and been promoted to stable in 1.31.
 
 For more details about this feature please visit the [Virtual IPs and Service Proxies documentation page](/docs/reference/networking/virtual-ips/#external-traffic-policy).
 
@@ -33,14 +48,16 @@ This work was done as part of [KEP #3836](https://github.com/kubernetes/enhancem
 
 ### Persistent Volume last phase transition time
 
-Persistent Volume last phase transition time feature moved to GA in v1.31. This feature adds a `PersistentVolumeStatus` field which holds a timestamp of when a PersistentVolume last transitioned to a different phase.
+Persistent Volume last phase transition time feature moved to GA in v1.31. 
+This feature adds a `PersistentVolumeStatus` field which holds a timestamp of when a PersistentVolume last transitioned to a different phase.
 With this feature enabled, every PersistentVolume object will have a new field `.status.lastTransitionTime`, that holds a timestamp of
-when the volume last transitioned its phase. This change is not immediate; the new field will be populated whenever a PersistentVolume is updated and first transitions between phases (`Pending`, `Bound`, or `Released`) after upgrading to Kubernetes v1.31.
+when the volume last transitioned its phase. 
+This change is not immediate; the new field will be populated whenever a PersistentVolume is updated and first transitions between phases (`Pending`, `Bound`, or `Released`) after upgrading to Kubernetes v1.31.
 This allows you to measure time between when a PersistentVolume moves from `Pending` to `Bound`. This can be also useful for providing metrics and SLOs.
 
 For more details about this feature please visit the [PersistentVolume documentation page](/docs/concepts/storage/persistent-volumes/).
 
-This work was done as a part of [KEP #3762](https://github.com/kubernetes/enhancements/issues/3762) lead by  [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
+This work was done as a part of [KEP #3762](https://github.com/kubernetes/enhancements/issues/3762) by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
 
 ## Highlights of features graduating to Beta
 
@@ -66,17 +83,23 @@ This work was done as part of [KEP #3866](https://github.com/kubernetes/enhancem
 
 ### Changes to reclaim policy for PersistentVolumes
 
-The Always Honor PersistentVolume Reclaim Policy feature has advanced to beta in Kubernetes v1.31. This enhancement ensures that the PersistentVolume (PV) reclaim policy is respected even after the associated PersistentVolumeClaim (PVC) is deleted, thereby preventing the leakage of volumes.
+The Always Honor PersistentVolume Reclaim Policy feature has advanced to beta in Kubernetes v1.31. 
+This enhancement ensures that the PersistentVolume (PV) reclaim policy is respected even after the associated PersistentVolumeClaim (PVC) is deleted, thereby preventing the leakage of volumes.
 
-Prior to this feature, the reclaim policy linked to a PV could be disregarded under specific conditions, depending on whether the PV or PVC was deleted first. Consequently, the corresponding storage resource in the external infrastructure might not be removed, even if the reclaim policy was set to "Delete". This led to potential inconsistencies and resource leaks.
+Prior to this feature, the reclaim policy linked to a PV could be disregarded under specific conditions, depending on whether the PV or PVC was deleted first. 
+Consequently, the corresponding storage resource in the external infrastructure might not be removed, even if the reclaim policy was set to "Delete". 
+This led to potential inconsistencies and resource leaks.
 
 With the introduction of this feature, Kubernetes now guarantees that the "Delete" reclaim policy will be enforced, ensuring the deletion of the underlying storage object from the backend infrastructure, regardless of the deletion sequence of the PV and PVC.
 
-This work was done as a part of [KEP #2644](https://github.com/kubernetes/enhancements/issues/2644) and lead by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
+This work was done as a part of [KEP #2644](https://github.com/kubernetes/enhancements/issues/2644) and by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage).
     
 ### Bound service account token improvements
 
-The `ServiceAccountTokenNodeBinding` feature is getting promoted to beta in 1.31. To allow for a robust chain of identity verification from the requester to the projected token, the Node object reference associated with the requesting Pod is now added in the private claims embedded into each JWT returned by the TokenRequest API. This helps avoid replay attacks with projected service account tokens. We can cross-reference the identity of the caller to the Node reference embedded in the JWT, which allows this verification to be rooted upon the same root of trust as the kubelet/requesting entity. This makes it easier to track the actions a single token has taken, and cross-reference that back to the origin of the token (via audit log inspection). 
+The `ServiceAccountTokenNodeBinding` feature is getting promoted to beta in 1.31. 
+To allow for a robust chain of identity verification from the requester to the projected token, the Node object reference associated with the requesting Pod is now added in the private claims embedded into each JWT returned by the TokenRequest API. 
+This helps avoid replay attacks with projected service account tokens. 
+We can cross-reference the identity of the caller to the Node reference embedded in the JWT, which allows this verification to be rooted upon the same root of trust as the kubelet/requesting entity. This makes it easier to track the actions a single token has taken, and cross-reference that back to the origin of the token (via audit log inspection). 
 
 This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
 
@@ -85,7 +108,9 @@ This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancem
 
 Support for clusters with multiple Service CIDRs moves to beta in v1.31 (disabled by default).
 
-There are multiple components in a Kubernetes cluster that consume IP addresses: Nodes, Pods and Services. Nodes and Pods IP ranges can be dynamically changed because depend on the infrastructure or the network plugin respectively. However, Services are defined during the cluster creation as a hardcoded flag in the kube-apiserver. 
+There are multiple components in a Kubernetes cluster that consume IP addresses: Nodes, Pods and Services. 
+Nodes and Pods IP ranges can be dynamically changed because depend on the infrastructure or the network plugin respectively. 
+However, Services are defined during the cluster creation as a hardcoded flag in the kube-apiserver. 
 IP exhaustion has been a problem for long lived or large clusters, as admins needed to expand, shrink or even replace entirely the assigned Service CIDR range. 
 These operations were never supported natively and were performed via complex and delicate maintenance operations, often causing downtime on their clusters. This new feature allows users and cluster admins to dynamically modify Service CIDR ranges with zero downtime.
 
@@ -125,9 +150,13 @@ _This is a selection of some of the improvements that are now alpha following th
     
 ### New DRA APIs for better accelerators and other hardware management
 
-Kubernetes v1.31 brings an updated dynamic resource allocation (DRA) API and design. The main focus in the update is on structured parameters because they make resource information and requests transparent to Kubernetes and clients and enable implementing features like cluster autoscaling. DRA support in the kubelet was updated such that version skew between kubelet and the control plane is possible. With structured parameters, the scheduler allocates ResourceClaims while scheduling a pod. Allocation by a DRA driver controller is still supported through what is now called "classic DRA".
+Kubernetes v1.31 brings an updated dynamic resource allocation (DRA) API and design. 
+The main focus in the update is on structured parameters because they make resource information and requests transparent to Kubernetes and clients and enable implementing features like cluster autoscaling. 
+DRA support in the kubelet was updated such that version skew between kubelet and the control plane is possible. With structured parameters, the scheduler allocates ResourceClaims while scheduling a pod. 
+Allocation by a DRA driver controller is still supported through what is now called "classic DRA".
 
-With Kubernetes v1.31, classic DRA has a separate feature gate named `DRAControlPlaneController`, which you need to enable explicitly. With such a control plane controller, a DRA driver can implement allocation policies that are not supported yet through structured parameters.
+With Kubernetes v1.31, classic DRA has a separate feature gate named `DRAControlPlaneController`, which you need to enable explicitly. 
+With such a control plane controller, a DRA driver can implement allocation policies that are not supported yet through structured parameters.
 
 This work was done as part of [KEP #3063](https://github.com/kubernetes/enhancements/issues/3063) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
     
@@ -135,7 +164,8 @@ This work was done as part of [KEP #3063](https://github.com/kubernetes/enhancem
 
 The Kubernetes community is moving towards fulfilling more Artificial Intelligence (AI) and Machine Learning (ML) use cases in the future. 
 
-One of the requirements to fulfill these use cases is to support Open Container Initiative (OCI) compatible images and artifacts (referred as OCI objects) directly as a native volume source. This allows users to focus on OCI standards as well as enables them to store and distribute any content using OCI registries.
+One of the requirements to fulfill these use cases is to support Open Container Initiative (OCI) compatible images and artifacts (referred as OCI objects) directly as a native volume source. 
+This allows users to focus on OCI standards as well as enables them to store and distribute any content using OCI registries.
 
 Given that, v1.31 adds a new alpha feature to allow using an OCI image as a volume in a Pod.
 This feature allows users to specify an image reference as volume in a pod while reusing it as volume
@@ -150,7 +180,6 @@ Expose device health information through the Pod Status is added as a new alpha 
 Before Kubernetes v1.31, the way to know whether or not a Pod is associated with the failed device is to use the [PodResources API](/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/#monitoring-device-plugin-resources). 
 
 By enabling this feature, the field `allocatedResourcesStatus` will be added to each container status, within the `.status` for each Pod. The `allocatedResourcesStatus` field reports health information for each device assigned to the container.
- 
 
 This work was done as part of [KEP #4680](https://github.com/kubernetes/enhancements/issues/4680) by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node).
 
@@ -169,10 +198,11 @@ This work was done as part of [KEP #4601](https://github.com/kubernetes/enhancem
 
 ### Restrictions on anonymous API access
 
-By enabling the feature gate `AnonymousAuthConfigurableEndpoints` users can now use the authentication configuration file to configure the endpoints that can be accessed by anonymous requests. This allows users to protect themselves against RBAC misconfigurations that can give anonymous users broad access to the cluster.
+By enabling the feature gate `AnonymousAuthConfigurableEndpoints` users can now use the authentication configuration file to configure the endpoints that can be accessed by anonymous requests. 
+This allows users to protect themselves against RBAC misconfigurations that can give anonymous users broad access to the cluster.
     
 
-This work was done as a part of [KEP #4633](https://github.com/kubernetes/enhancements/issues/4633) and lead by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
+This work was done as a part of [KEP #4633](https://github.com/kubernetes/enhancements/issues/4633) and by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
     
 ## Graduations, deprecations, and removals in 1.31
     
@@ -198,7 +228,8 @@ This release includes a total of 11 enhancements promoted to Stable:
     
 ### Deprecations and Removals 
 
-As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health. Also see the Kubernetes [deprecation and removals policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
+As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health. 
+See the Kubernetes [deprecation and removal policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/) for more details on this process.
     
 #### Cgroup v1 enters the maintenance mode
 
@@ -326,9 +357,13 @@ To get started with Kubernetes, check out these [interactive tutorials](/docs/tu
 
 ## Release team
 
-Kubernetes is only possible with the support, commitment, and hard work of its community. Each release team is made up of dedicated community volunteers who work together to build the many pieces that make up the Kubernetes releases you rely on. This requires the specialized skills of people from all corners of our community, from the code itself to its documentation and project management.
+Kubernetes is only possible with the support, commitment, and hard work of its community. 
+Each release team is made up of dedicated community volunteers who work together to build the many pieces that make up the Kubernetes releases you rely on. 
+This requires the specialized skills of people from all corners of our community, from the code itself to its documentation and project management.
 
-We would like to thank the entire [release team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md) for the hours spent hard at work to deliver the Kubernetes v1.31 release to our community. The Release Team's membership ranges from first-time shadows to returning team leads with experience forged over several release cycles. A very special thanks goes out our release lead, Angelos Kolaitis, for supporting us through a successful release cycle, advocating for us, making sure that we could all contribute in the best way possible, and challenging us to improve the release process.
+We would like to thank the entire [release team](https://github.com/kubernetes/sig-release/blob/master/releases/release-1.31/release-team.md) for the hours spent hard at work to deliver the Kubernetes v1.31 release to our community. 
+The Release Team's membership ranges from first-time shadows to returning team leads with experience forged over several release cycles. 
+A very special thanks goes out our release lead, Angelos Kolaitis, for supporting us through a successful release cycle, advocating for us, making sure that we could all contribute in the best way possible, and challenging us to improve the release process.
 
 
 ## Project velocity
@@ -376,12 +411,16 @@ Explore the upcoming Kubernetes and cloud-native events from August to November 
 
 ## Upcoming release webinar
 
-Join members of the Kubernetes v1.31 release team on Thursday, 	Thu Sep 12, 2024 10am PT to learn about the major features of this release, as well as deprecations and removals to help plan for upgrades. For more information and registration, visit the [event page](https://community.cncf.io/events/details/cncf-cncf-online-programs-presents-cncf-live-webinar-kubernetes-131-release/) on the CNCF Online Programs site.
+Join members of the Kubernetes v1.31 release team on Thursday, Thu Sep 12, 2024 10am PT to learn about the major features of this release, as well as deprecations and removals to help plan for upgrades. 
+For more information and registration, visit the [event page](https://community.cncf.io/events/details/cncf-cncf-online-programs-presents-cncf-live-webinar-kubernetes-131-release/) on the CNCF Online Programs site.
 
 
 ## Get involved
 
-The simplest way to get involved with Kubernetes is by joining one of the many [Special Interest Groups](https://github.com/kubernetes/community/blob/master/sig-list.md) (SIGs) that align with your interests. Have something you’d like to broadcast to the Kubernetes community? Share your voice at our weekly [community meeting](https://github.com/kubernetes/community/tree/master/communication), and through the channels below. Thank you for your continued feedback and support.
+The simplest way to get involved with Kubernetes is by joining one of the many [Special Interest Groups](https://github.com/kubernetes/community/blob/master/sig-list.md) (SIGs) that align with your interests. 
+Have something you’d like to broadcast to the Kubernetes community? 
+Share your voice at our weekly [community meeting](https://github.com/kubernetes/community/tree/master/communication), and through the channels below. 
+Thank you for your continued feedback and support.
 
 - Follow us on X [@Kubernetesio](https://x.com/kubernetesio) for latest updates
 - Join the community discussion on [Discuss](https://discuss.kubernetes.io/)
