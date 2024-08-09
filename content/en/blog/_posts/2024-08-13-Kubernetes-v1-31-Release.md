@@ -98,8 +98,8 @@ This work was done as a part of [KEP #2644](https://github.com/kubernetes/enhanc
 
 The `ServiceAccountTokenNodeBinding` feature is getting promoted to beta in 1.31. 
 To allow for a robust chain of identity verification from the requester to the projected token, the Node object reference associated with the requesting Pod is now added in the private claims embedded into each JWT returned by the TokenRequest API. 
-This helps avoid replay attacks with projected service account tokens. 
-We can cross-reference the identity of the caller to the Node reference embedded in the JWT, which allows this verification to be rooted upon the same root of trust as the kubelet/requesting entity. This makes it easier to track the actions a single token has taken, and cross-reference that back to the origin of the token (via audit log inspection). 
+This helps avoid replay attacks where forwarding of credentials of projected service account tokens from one actor to another. 
+We can cross-reference the identity of the caller to the Node reference embedded in the JWT, which allows this verification to be rooted upon the same root of trust as the kubelet/requesting entity. For more inforamtion, read the [bound service account tokens documentation](/docs/reference/access-authn-authz/service-accounts-admin/#bound-service-account-tokens).
 
 This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth).
 
